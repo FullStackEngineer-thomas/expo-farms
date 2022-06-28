@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Button from "../../components/buttons";
@@ -35,16 +35,14 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(value.email, value.password);
-    } catch (error) {
-      console.log(error);
-    }
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(value.email, value.password)
+      .then(() => alert("Success"))
+      .catch(() => alert("user is existing"));
   };
   return (
-    <View style={styles.mainBody}>
+    <SafeAreaView style={styles.mainBody}>
       <View style={{ alignItems: "center" }}>
         <Image
           source={require("../../../assets/Image/logo.png")}
@@ -97,7 +95,7 @@ const SignUp = () => {
       <Text onPress={() => navigation.navigate("SignIn")} style={styles.text_1}>
         already loggedn in? Login
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

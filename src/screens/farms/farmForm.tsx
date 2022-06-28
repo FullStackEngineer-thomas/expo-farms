@@ -1,29 +1,84 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  SafeAreaView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 import * as ImagePicker from "expo-image-picker";
 import { Formik } from "formik";
 import * as yup from "yup";
+import firebase from "firebase";
 import Input from "../../components/inputs";
 import Button from "../../components/buttons";
 import { RootStackParmList } from "../../navigations/rootStackParams";
+import useAuthentication from "../../utils/hooks/useAuthentication";
+import { db } from "../../configure/firebase";
 
 type userScreenProp = StackNavigationProp<RootStackParmList, "Farms">;
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-const farmFormValidationSchema = yup.object().shape({
-  displayName: yup.string().required("required"),
-  farmName: yup.string().required("required"),
-  phoneNumber: yup.string().matches(phoneRegExp, "Phone number"),
-  hours: yup.string(),
-});
 const FarmForm = () => {
   const [imgUri, setImageUri] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation<userScreenProp>();
-  const createFarm = () => {
-    navigation.navigate("Farms");
+  const { user } = useAuthentication();
+  const uid = user?.uid;
+  const farmFormValidationSchema = yup.object().shape({
+    displayName: yup.string().required("required"),
+    farmName: yup
+      .string()
+      .required("required")
+      .test(
+        "FarmNameValidation",
+        "Error Message of Farm Name Validation",
+        async (item, testContext) => {
+          return new Promise((resolve) => {
+            if (!item) resolve(false);
+
+            db.collection("farms")
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  if (doc.data().uid === uid && doc.data().farmName === item) {
+                    alert(
+                      "the FarmName is Existing,Please try as another name"
+                    );
+                    resolve(false);
+                  } else {
+                    resolve(true);
+                  }
+                });
+              });
+          });
+        }
+      ),
+    phoneNumber: yup.string().matches(phoneRegExp, "Phone number"),
+    hours: yup.string(),
+  });
+  const createFarm = async (value: any) => {
+    setLoading(true);
+    try {
+      const requestBody = { ...value, uid };
+      if (!!imgUri) {
+        const imgId = await uploadImagetoFirestorage(imgUri);
+        requestBody.imgId = imgId;
+      }
+      db.collection("farms").doc().set(requestBody);
+      console.log("values:", value);
+      navigation.navigate("Farms");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   const selectImagePicker = async () => {
     const result: any = await ImagePicker.launchImageLibraryAsync({
@@ -34,8 +89,39 @@ const FarmForm = () => {
     });
     setImageUri(result.uri);
   };
+
+  //upload image to fireStorage
+
+  const uploadImagetoFirestorage = async (uri: string) => {
+    const blob: Blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log("err", e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+    const fileRef = firebase.storage().ref().child(uuidv4());
+
+    // await uploadBytes(fileRef, blob);
+    const snapshot = await fileRef.put(blob, { contentType: "image/png" });
+
+    const remoteURL = await snapshot.ref.getDownloadURL();
+
+    // We're done with the blob, close and release it
+    // blob.close();
+
+    return remoteURL;
+  };
+
   return (
-    <View style={styles.mainBody}>
+    <SafeAreaView style={styles.mainBody}>
       <View style={{ alignItems: "center" }}>
         <Image
           source={require("../../../assets/Image/logo.png")}
@@ -55,7 +141,7 @@ const FarmForm = () => {
           phoneNumber: "",
           hours: "",
         }}
-        onSubmit={() => createFarm()}
+        onSubmit={(value) => createFarm(value)}
         validationSchema={farmFormValidationSchema}
       >
         {({
@@ -108,10 +194,11 @@ const FarmForm = () => {
               <Text style={styles.errorText}>{errors.hours}</Text>
             )}
             <View style={styles.imageContainer}>
+              {loading && <ActivityIndicator size="large" color="white" />}
               {!!imgUri ? (
                 <Image
                   source={{ uri: imgUri }}
-                  style={{ width: 100, height: 100, resizeMode: "center" }}
+                  style={{ width: 100, height: 100 }}
                 />
               ) : (
                 <Button
@@ -124,7 +211,7 @@ const FarmForm = () => {
           </View>
         )}
       </Formik>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -152,7 +239,6 @@ const styles = StyleSheet.create({
     color: "red",
   },
   imageContainer: {
-    flex: 1,
     borderColor: "white",
     borderWidth: 1,
     justifyContent: "center",

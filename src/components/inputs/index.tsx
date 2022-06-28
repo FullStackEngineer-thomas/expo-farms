@@ -43,9 +43,8 @@ export default Input;
 
 const styles = StyleSheet.create({
   inputStyle: {
-    flex: 1,
     color: "white",
-    padding: 12,
+    padding: 15,
     marginBottom: 10,
     borderWidth: 1,
     borderRadius: 20,

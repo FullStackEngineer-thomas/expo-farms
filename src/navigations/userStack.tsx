@@ -9,7 +9,12 @@ const Stack = createNativeStackNavigator();
 const UserStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: true,
+          headerStyle: { backgroundColor: "#6FE25B" },
+        }}
+      >
         <Stack.Screen name="Farms" component={Farms} />
         <Stack.Screen name="FarmForm" component={FarmForm} />
       </Stack.Navigator>

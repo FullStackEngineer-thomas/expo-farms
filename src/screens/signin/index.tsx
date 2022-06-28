@@ -1,7 +1,14 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Alert,
+} from "react-native";
 import Button from "../../components/buttons";
 import Input from "../../components/inputs";
 import { RootStackParmList } from "../../navigations/rootStackParams";
@@ -29,14 +36,14 @@ const signUpValidationSchema = yup.object().shape({
 const SignIn = () => {
   const navigation = useNavigation<authScreenProp>();
   const userLogin = (value: User) => {
-    try {
-      firebase.auth().signInWithEmailAndPassword(value.email, value.password);
-    } catch (error) {
-      console.log(error);
-    }
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(value.email, value.password)
+      .then(() => alert("success"))
+      .catch(() => alert("invalied"));
   };
   return (
-    <View style={styles.mainBody}>
+    <SafeAreaView style={styles.mainBody}>
       <View style={{ alignItems: "center" }}>
         <Image
           source={require("../../../assets/Image/logo.png")}
@@ -65,7 +72,7 @@ const SignIn = () => {
             <Input
               value={values.email}
               placeHolder="Enter Email"
-              handleChange={() => console.log()}
+              handleChange={handleChange("email")}
               handleBlur={handleBlur("email")}
               secureTextEntry={undefined}
             />
@@ -75,9 +82,9 @@ const SignIn = () => {
             <Input
               value={values.password}
               placeHolder="Enter Password"
-              handleChange={() => console.log()}
-              handleBlur={handleBlur("email")}
-              secureTextEntry={undefined}
+              handleChange={handleChange("password")}
+              handleBlur={handleBlur("password")}
+              secureTextEntry={true}
             />
             {errors.email && touched.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -90,7 +97,7 @@ const SignIn = () => {
       <Text onPress={() => navigation.navigate("SignUp")} style={styles.text_1}>
         New Here? Register
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
