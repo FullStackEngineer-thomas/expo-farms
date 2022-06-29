@@ -18,9 +18,12 @@
 // eslint-disable-next-line no-unused-vars
 const admin = require("firebase-admin");
 const cypressFirebasePlugin = require("cypress-firebase").plugin;
+const dotenvPlugin = require("cypress-dotenv");
+const dotenv = require("dotenv");
 
 module.exports = (on, config) => {
-  const extendedConfig = cypressFirebasePlugin(on, config, admin);
+  let extendedConfig = cypressFirebasePlugin(on, config, admin);
+  extendedConfig = dotenvPlugin(extendedConfig, dotenv, true);
 
   // Add other plugins/tasks such as code coverage here
 

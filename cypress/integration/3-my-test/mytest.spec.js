@@ -4,9 +4,10 @@ describe("myTest from Login", () => {
     cy.get("[data-testid=email_login]").type("thomas@gmail.com");
     cy.get("[data-testid=password_login]").type("123456");
     cy.get("[data-testid=click_login]").click();
-    cy.on("window:alert", (text) => {
-      expect(text).to.contain("Success!");
-    });
+    cy.logout();
+    // cy.on("window:alert", (text) => {
+    //   expect(text).to.contain("Success!");
+    // });
 
     // cy.get("[data-testid=click_createFarm]").click();
     // cy.get("[data-testid=displayName]").type("thomasFarm");
@@ -19,4 +20,10 @@ describe("myTest from Login", () => {
     //   expect(text).to.contain("You are logged out");
     // });
   });
+  // it("After Login Success", () => {
+  //   cy.login();
+  //   // cy.on("window:alert", (text) => {
+  //   //   expect(text).to.contain("Success!");
+  //   // });
+  // });
 });

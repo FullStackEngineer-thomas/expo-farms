@@ -29,6 +29,8 @@ import "firebase/database";
 import "firebase/firestore";
 import { attachCustomCommands } from "cypress-firebase";
 
+console.log("~~~~~", Cypress.env("FIREBASE_API_KEY"));
+
 const fbConfig = {
   // Your config from Firebase Console
   apiKey: Cypress.env("FIREBASE_API_KEY"),
@@ -37,6 +39,7 @@ const fbConfig = {
   storageBucket: Cypress.env("FIREBASE_STORAGE_BUCKET"),
   messagingSenderId: Cypress.env("FIREBASE_MESSAGING_SENDER_ID"),
   appId: Cypress.env("FIREBASE_APP_ID"),
+  measurementId: Cypress.env("FIREBASE_MEASUREMENT_ID"),
 };
 
 firebase.initializeApp(fbConfig);
