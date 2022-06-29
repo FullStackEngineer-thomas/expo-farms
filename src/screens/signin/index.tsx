@@ -93,7 +93,11 @@ const SignIn = () => {
         )}
       </Formik>
 
-      <Text onPress={() => navigation.navigate("SignUp")} style={styles.text_1}>
+      <Text
+        onPress={() => navigation.navigate("SignUp")}
+        style={styles.text_1}
+        testID="click_newRegister"
+      >
         New Here? Register
       </Text>
     </SafeAreaView>
