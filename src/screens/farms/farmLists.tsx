@@ -36,6 +36,7 @@ const FarmLists = (props: Props) => {
     const getFarms = () => {
       setLoading(true);
       console.log("uid_???", uid);
+      // get Data from firebase no real time
       // db.collection("farms")
       //   .get()
       //   .then((querySnapshot) => {
@@ -109,7 +110,11 @@ const FarmLists = (props: Props) => {
       ) : (
         <Empty />
       )}
-      <Button title="Sign Out" handleSubmitPress={() => signOut()} />
+      <Button
+        testId="click_signout"
+        title="Sign Out"
+        handleSubmitPress={() => signOut()}
+      />
     </SafeAreaView>
   );
 };

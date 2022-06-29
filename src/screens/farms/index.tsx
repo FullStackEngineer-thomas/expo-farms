@@ -17,6 +17,7 @@ const Farms = () => {
   return (
     <SafeAreaView style={{ flex: 1, marginTop: 10, marginHorizontal: 20 }}>
       <Button
+        testId="click_createFarm"
         title="create Farm"
         handleSubmitPress={() => navigation.navigate("FarmForm")}
       />

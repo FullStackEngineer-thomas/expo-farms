@@ -2,6 +2,7 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 
 interface Props {
+  testId: string;
   title: string;
   handleSubmitPress: () => void;
 }
@@ -13,6 +14,7 @@ const Button = (props: Props) => {
         style={styles.buttonStyle}
         activeOpacity={0.5}
         onPress={props.handleSubmitPress}
+        testID={props.testId}
       >
         <Text style={styles.buttonTextStyle}>{props.title}</Text>
       </TouchableOpacity>

@@ -6,6 +6,7 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -121,7 +122,7 @@ const FarmForm = () => {
   };
 
   return (
-    <SafeAreaView style={styles.mainBody}>
+    <ScrollView contentContainerStyle={styles.mainBody}>
       <View style={{ alignItems: "center" }}>
         <Image
           source={require("../../../assets/Image/logo.png")}
@@ -154,6 +155,7 @@ const FarmForm = () => {
         }) => (
           <View style={styles.SectionStyle}>
             <Input
+              testId="displayName"
               value={values.displayName}
               placeHolder="Enter displayName"
               handleChange={handleChange("displayName")}
@@ -164,6 +166,7 @@ const FarmForm = () => {
               <Text style={styles.errorText}>{errors.displayName}</Text>
             )}
             <Input
+              testId="farmName"
               value={values.farmName}
               placeHolder="Enter farmName"
               handleChange={handleChange("farmName")}
@@ -174,6 +177,7 @@ const FarmForm = () => {
               <Text style={styles.errorText}>{errors.farmName}</Text>
             )}
             <Input
+              testId="phoneNumber"
               value={values.phoneNumber}
               placeHolder="Enter phoneNumber(optional)"
               handleChange={handleChange("phoneNumber")}
@@ -184,6 +188,7 @@ const FarmForm = () => {
               <Text style={styles.errorText}>{errors.phoneNumber}</Text>
             )}
             <Input
+              testId="hours"
               value={values.hours}
               placeHolder="Enter hours(optional)"
               handleChange={handleChange("hours")}
@@ -202,16 +207,21 @@ const FarmForm = () => {
                 />
               ) : (
                 <Button
+                  testId="click_uploadimage"
                   title="Upload Image"
                   handleSubmitPress={() => selectImagePicker()}
                 />
               )}
             </View>
-            <Button title="Add" handleSubmitPress={handleSubmit} />
+            <Button
+              testId="click_add"
+              title="Add"
+              handleSubmitPress={handleSubmit}
+            />
           </View>
         )}
       </Formik>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -219,7 +229,7 @@ export default FarmForm;
 
 const styles = StyleSheet.create({
   mainBody: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "center",
     backgroundColor: "#236ab1",
   },

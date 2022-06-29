@@ -69,6 +69,7 @@ const SignUp = () => {
         }) => (
           <View style={styles.SectionStyle}>
             <Input
+              testId="email_signup"
               value={values.email}
               handleChange={handleChange("email")}
               handleBlur={handleBlur("email")}
@@ -79,6 +80,7 @@ const SignUp = () => {
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
             <Input
+              testId="password_signup"
               value={values.password}
               handleChange={handleChange("password")}
               handleBlur={handleBlur("password")}
@@ -88,7 +90,11 @@ const SignUp = () => {
             {errors.password && touched.password && (
               <Text style={styles.errorText}>{errors.password}</Text>
             )}
-            <Button title="Sign Up" handleSubmitPress={() => handleSubmit()} />
+            <Button
+              testId="click_signup"
+              title="Sign Up"
+              handleSubmitPress={() => handleSubmit()}
+            />
           </View>
         )}
       </Formik>

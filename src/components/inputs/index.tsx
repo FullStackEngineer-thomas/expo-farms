@@ -12,6 +12,7 @@ interface Props {
   handleBlur: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
   placeHolder: string;
   secureTextEntry: boolean | undefined;
+  testId: string;
 }
 
 const Input = ({
@@ -20,9 +21,11 @@ const Input = ({
   placeHolder,
   value,
   secureTextEntry,
+  testId,
 }: Props) => {
   return (
     <TextInput
+      testID={testId}
       value={value}
       onChangeText={handleChange}
       onBlur={handleBlur}

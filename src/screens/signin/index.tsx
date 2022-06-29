@@ -1,14 +1,7 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, Image, SafeAreaView } from "react-native";
 import Button from "../../components/buttons";
 import Input from "../../components/inputs";
 import { RootStackParmList } from "../../navigations/rootStackParams";
@@ -39,7 +32,7 @@ const SignIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(value.email, value.password)
-      .then(() => alert("success"))
+      .then(() => alert("Success!"))
       .catch(() => alert("invalied"));
   };
   return (
@@ -70,6 +63,7 @@ const SignIn = () => {
         }) => (
           <View style={styles.SectionStyle}>
             <Input
+              testId="email_login"
               value={values.email}
               placeHolder="Enter Email"
               handleChange={handleChange("email")}
@@ -80,6 +74,7 @@ const SignIn = () => {
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
             <Input
+              testId="password_login"
               value={values.password}
               placeHolder="Enter Password"
               handleChange={handleChange("password")}
@@ -89,7 +84,11 @@ const SignIn = () => {
             {errors.email && touched.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
-            <Button title="Sign In" handleSubmitPress={handleSubmit} />
+            <Button
+              testId="click_login"
+              title="Sign In"
+              handleSubmitPress={handleSubmit}
+            />
           </View>
         )}
       </Formik>
